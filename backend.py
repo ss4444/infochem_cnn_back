@@ -7,7 +7,7 @@ from PIL import Image
 from schemas import Predict
 from starlette.middleware.cors import CORSMiddleware
 
-model = torch.load('gg_softmax.pth')
+model = torch.load('gg_softmax2.pth')
 
 app = FastAPI()
 

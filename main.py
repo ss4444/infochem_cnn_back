@@ -13,7 +13,7 @@ from tqdm import tqdm
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 transform = transforms.Compose(
-    [transforms.Resize((64, 64)),
+    [transforms.Resize((224, 224)),
      transforms.ToTensor(),
      transforms.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])])
 
@@ -35,7 +35,7 @@ model.fc = nn.Sequential(
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
 
-epochs = 3
+epochs = 10
 model.to(device)
 correct = 0
 
@@ -60,6 +60,10 @@ for epoch in range(epochs):
 
         acc = accuracy(outputs, labels)
         running_loss += loss.item()
+    for i, data in tqdm(enumerate(testloader)):
+        inputs, labels = data[0].to(device), data[1].to(device)
+        outputs = model(inputs)
+        val_acc = accuracy(outputs, labels)
 
-    print("Epoch {} - Training loss: {}, acc: {}".format(epoch, running_loss/len(trainloader), acc))
-torch.save(model, 'gg_softmax.pth')
+    print("Epoch {} - Training loss: {}, acc: {}, val_acc: {}".format(epoch +1 , running_loss/len(trainloader), acc, val_acc))
+torch.save(model, 'gg_softmax2.pth')
